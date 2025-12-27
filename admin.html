@@ -4,148 +4,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
-    <meta name="googlebot" content="noindex, nofollow">
-    <meta name="bingbot" content="noindex, nofollow">
-    <meta name="slurp" content="noindex, nofollow">
-    <title>Panel Admin - Liens Telegram</title>
+    <title>Admin - ABD PLAYER</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Protection : attendre le chargement des scripts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
-        // Masquer le message de chargement une fois que requireAuth() a réussi
         function hideLoadingMessage() {
             const loadingMsg = document.getElementById('loadingMessage');
-            if (loadingMsg) {
-                loadingMsg.style.display = 'none';
-            }
+            if (loadingMsg) loadingMsg.style.display = 'none';
         }
-        
-        // Exposer la fonction globalement
         window.hideLoadingMessage = hideLoadingMessage;
         
-        // Vérifier périodiquement si les scripts sont chargés
         let checkInterval = setInterval(function() {
-            // Vérifier si requireAuth est disponible (scripts chargés)
             if (typeof requireAuth !== 'undefined') {
                 clearInterval(checkInterval);
-                // Les scripts sont chargés, admin.js va gérer l'authentification
-                console.log('Scripts chiffrés chargés, authentification en cours...');
             }
-        }, 100); // Vérifier toutes les 100ms
+        }, 100);
         
-        // Timeout de sécurité : si les scripts ne se chargent pas après 15 secondes
         setTimeout(function() {
             clearInterval(checkInterval);
-            
             if (typeof requireAuth === 'undefined') {
-                console.error('Les scripts chiffrés ne se sont pas chargés correctement');
                 const loadingMsg = document.getElementById('loadingMessage');
                 if (loadingMsg) {
-                    loadingMsg.innerHTML = '<div style="font-size: 24px;">❌ Erreur de chargement</div><div style="font-size: 14px; color: #888; margin-top: 10px;">Les fichiers chiffrés n\'ont pas pu être chargés.<br>Vérifiez que decrypt.js contient la bonne clé de chiffrement.<br><br><a href="index.html" style="color: #4a9eff; text-decoration: underline;">Retour à l\'accueil</a></div>';
+                    loadingMsg.innerHTML = '<div style="font-size: 24px;">❌ Erreur de chargement</div><div style="font-size: 14px; color: #888; margin-top: 10px;">Les fichiers chiffrés n\'ont pas pu être chargés.<br><br><a href="index.html" style="color: #4a9eff; text-decoration: underline;">Retour à l\'accueil</a></div>';
                 }
             }
-        }, 15000); // 15 secondes de timeout
+        }, 15000);
     </script>
 </head>
 <body>
-    <!-- Message de chargement pendant l'authentification -->
-    <div id="loadingMessage" style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; flex-direction: column; gap: 20px;">
-        <div style="font-size: 24px;">🔐 Vérification de l'authentification...</div>
-        <div style="font-size: 14px; color: #888;">Redirection en cours si non autorisé...</div>
+    <div id="loadingMessage" style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #0a0a0a; color: #fff; font-family: 'Poppins', sans-serif; flex-direction: column; gap: 20px;">
+        <div style="font-size: 24px;">🔐 Vérification...</div>
     </div>
     
-    <div class="container" style="display: none;">
-        <header>
-            <h1>⚙️ Panel Admin</h1>
-            <p class="subtitle">Gérez vos liens Telegram et les liens sociaux</p>
-            <div class="social-links">
-                <a href="index.html" class="social-btn admin-btn">
-                    <span>🏠 Retour à l'accueil</span>
-                </a>
-                <button onclick="logout()" class="social-btn logout-btn">
-                    <span>🚪 Déconnexion</span>
-                </button>
+    <div class="app-container" style="display: none;">
+        <header class="admin-header">
+            <div class="header-wrapper">
+                <h1 class="logo">⚙️ Administration</h1>
+                <div class="header-actions">
+                    <a href="index.html" class="btn btn-outline">🏠 Accueil</a>
+                    <button onclick="logout()" class="btn btn-danger">🚪 Déconnexion</button>
+                </div>
             </div>
         </header>
 
-        <div class="admin-section">
-            <h2>Ajouter un nouveau lien</h2>
-            <form id="linkForm" class="link-form">
-                <div class="form-group">
-                    <label for="matchName">Nom du match / Équipes</label>
-                    <input type="text" id="matchName" placeholder="Ex: PSG vs Marseille" required>
-                </div>
-                <div class="form-group">
-                    <label for="telegramLink">Lien Telegram</label>
-                    <input type="url" id="telegramLink" placeholder="https://t.me/..." required>
-                </div>
-                <div class="form-group">
-                    <label for="date">Date du match</label>
-                    <input type="date" id="date" required>
-                </div>
-                <div class="form-group">
-                    <label for="time">Heure du match</label>
-                    <input type="time" id="time" required>
-                </div>
-                <div class="form-group">
-                    <label for="competition">Compétition</label>
-                    <input type="text" id="competition" placeholder="Ex: Ligue 1, Champions League..." required>
-                </div>
-                <div class="form-group">
-                    <label for="linkStatus">Statut du lien</label>
-                    <select id="linkStatus" required>
-                        <option value="active">🟢 Actif (à jour)</option>
-                        <option value="dead">🔴 Mort (lien ne fonctionne plus)</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-primary">
-                    <span>➕ Ajouter le lien</span>
-                </button>
-            </form>
-        </div>
+        <main class="admin-content">
+            <section class="admin-panel">
+                <h2>➕ Ajouter un Stream</h2>
+                <form id="streamForm" class="stream-form">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>🖼️ Image du Stream</label>
+                            <div class="image-upload-box" id="imageUploadBox">
+                                <input type="file" id="streamImage" accept="image/*" class="image-input-hidden">
+                                <div class="image-preview-wrapper">
+                                    <img id="imagePreview" src="" alt="Preview" style="display: none;">
+                                    <div class="image-placeholder" id="imagePlaceholder">
+                                        <span class="upload-icon">📷</span>
+                                        <span class="upload-text">Cliquez pour ajouter une image</span>
+                                        <span class="upload-hint">JPG, PNG (max 5MB)</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-remove" id="removeImageBtn" style="display: none;">❌ Supprimer</button>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="admin-section">
-            <h2>Gérer les liens sociaux</h2>
-            <form id="socialForm" class="link-form">
-                <div class="form-group">
-                    <label for="discordUrl">Lien Discord</label>
-                    <input type="url" id="discordUrl" placeholder="https://discord.gg/...">
-                </div>
-                <div class="form-group">
-                    <label for="xUrl">Lien X (Twitter)</label>
-                    <input type="url" id="xUrl" placeholder="https://x.com/... ou https://twitter.com/...">
-                </div>
-                <button type="submit" class="btn-primary">
-                    <span>💾 Sauvegarder les liens sociaux</span>
-                </button>
-            </form>
-        </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="streamName">📺 Nom du Stream</label>
+                            <input type="text" id="streamName" placeholder="Ex: PSG vs Marseille" required>
+                            <div id="streamNameError" class="error-message" style="display: none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="streamLink">🔗 Lien Telegram</label>
+                            <input type="url" id="streamLink" placeholder="https://t.me/..." required>
+                        </div>
+                    </div>
 
-        <div class="admin-section">
-            <div class="section-header">
-                <h2>Gérer les liens existants</h2>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">Tous</button>
-                    <button class="filter-btn" data-filter="active">Actifs</button>
-                    <button class="filter-btn" data-filter="dead">Morts</button>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="streamDate">📅 Date</label>
+                            <input type="date" id="streamDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="streamTime">🕐 Heure</label>
+                            <input type="time" id="streamTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="streamCompetition">🏆 Compétition</label>
+                            <input type="text" id="streamCompetition" placeholder="Ligue 1, Champions League..." required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="streamStatus">📊 Statut</label>
+                            <select id="streamStatus" required>
+                                <option value="active">🟢 Actif</option>
+                                <option value="dead">🔴 Mort</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        ✅ Ajouter le Stream
+                    </button>
+                </form>
+            </section>
+
+            <section class="admin-panel">
+                <h2>🌐 Liens Sociaux</h2>
+                <form id="socialForm" class="stream-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="discordUrl">💬 Discord</label>
+                            <input type="url" id="discordUrl" placeholder="https://discord.gg/...">
+                        </div>
+                        <div class="form-group">
+                            <label for="xUrl">𝕏 Twitter</label>
+                            <input type="url" id="xUrl" placeholder="https://x.com/...">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">💾 Sauvegarder</button>
+                </form>
+            </section>
+
+            <section class="admin-panel">
+                <div class="section-title-bar">
+                    <h2>📋 Streams Existants</h2>
+                    <div class="filter-tabs">
+                        <button class="tab-btn active" data-filter="all">Tous</button>
+                        <button class="tab-btn" data-filter="active">Actifs</button>
+                        <button class="tab-btn" data-filter="dead">Morts</button>
+                    </div>
                 </div>
-            </div>
-            <div id="adminLinksList" class="links-list">
-                <!-- Les liens seront ajoutés ici dynamiquement -->
-            </div>
-            <div id="adminEmptyState" class="empty-state">
-                <div class="empty-icon">📋</div>
-                <p>Aucun lien enregistré pour le moment</p>
-            </div>
-        </div>
+                <div id="adminStreamsList" class="streams-grid"></div>
+                <div id="adminEmptyState" class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <h3>Aucun stream</h3>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <!-- Déchiffreur (doit être chargé en premier) -->
-    <script src="decrypt.js"></script>
-    
-    <!-- Fichiers chiffrés (seront déchiffrés automatiquement) -->
+    <script src="loader.js"></script>
     <script data-enc="config.js.enc.js"></script>
     <script data-enc="protection.js.enc.js"></script>
     <script data-enc="auth.js.enc.js"></script>
@@ -153,4 +157,3 @@
     <script data-enc="admin.js.enc.js"></script>
 </body>
 </html>
-
