@@ -144,8 +144,23 @@ async function loadAndDecrypt(filePath) {
         // Déchiffrer le contenu
         const decryptedContent = await decryptContent(encryptedContent, ENCRYPTION_KEY);
         
+        // Vérifier si le script a déjà été chargé (pour éviter les doublons)
+        const scriptId = 'encrypted-' + filePath.replace(/[^a-zA-Z0-9]/g, '-');
+        if (document.getElementById(scriptId)) {
+            console.log(`⚠️ ${filePath} déjà chargé, ignoré`);
+            return true;
+        }
+        
+        // Vérifier si des variables globales du script sont déjà définies
+        // Pour common.js, vérifier GITHUB_API_URL
+        if (filePath.includes('common.js') && typeof window.GITHUB_API_URL !== 'undefined') {
+            console.log(`⚠️ ${filePath} déjà chargé (variables globales détectées), ignoré`);
+            return true;
+        }
+        
         // Créer un script et l'exécuter
         const script = document.createElement('script');
+        script.id = scriptId;
         script.textContent = decryptedContent;
         document.head.appendChild(script);
         
