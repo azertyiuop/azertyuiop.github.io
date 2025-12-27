@@ -1,5 +1,5 @@
 const GITHUB_CONFIG = {
-    token: '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', // TOKEN GIT
+    token: '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', // TOKEN GIT
     gistId: null
 };
 
