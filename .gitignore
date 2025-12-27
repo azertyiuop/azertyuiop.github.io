@@ -1,0 +1,29 @@
+# Données
+data.json
+*.log
+
+# Configuration (contient le token GitHub)
+config.js
+
+# Fichiers originaux (ne pas commiter)
+*.original
+*.js.original
+
+# Clé de chiffrement (NE JAMAIS COMMITER)
+.encryption_key
+encrypted/.encryption_key
+encryption_key.txt
+
+# Fichiers JavaScript originaux (ne pas commiter, seulement les .enc.js)
+auth.js
+common.js
+admin.js
+script.js
+protection.js
+config.js
+encrypt.js
+
+# Fichiers de déploiement
+.netlify/
+.vercel/
+
