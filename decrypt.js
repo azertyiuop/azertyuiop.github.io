@@ -1,8 +1,32 @@
 // Déchiffreur de fichiers JavaScript chiffrés
-// Remplacez VOTRE_CLE_DE_CHIFFREMENT_ICI par la clé générée par encrypt.js
+// La clé est reconstituée dynamiquement pour éviter qu'elle soit visible en clair
 
-const ENCRYPTION_KEY = 'a4f016b34e31f47975c80ce41e7d66ad994bbafe5732ae07ba71749e54690afb'; // Clé de chiffrement
 const ENCRYPTED_DIR = 'encrypted'; // Dossier contenant les fichiers chiffrés
+
+// Clé de chiffrement obscurcie (divisée en plusieurs parties)
+(function() {
+    'use strict';
+    // Parties de la clé (obscurcies)
+    const _p1 = 'ed8a646633c3c98d';
+    const _p2 = '79c0ceda491ef433';
+    const _p3 = '1d1df8b7f8de7a1d';
+    const _p4 = '8167b99c07719462';
+    
+    // Reconstituer la clé (obscurcie avec des opérations)
+    window._ENCRYPTION_KEY = _p1 + _p2 + _p3 + _p4;
+})();
+
+// Variable globale pour la clé (reconstituée)
+const ENCRYPTION_KEY = window._ENCRYPTION_KEY || (function() {
+    // Fallback si la clé n'a pas été définie
+    const parts = [
+        String.fromCharCode(101, 100, 56, 97, 54, 52, 54, 54, 51, 51, 99, 51, 99, 57, 56, 100),
+        String.fromCharCode(55, 57, 99, 48, 99, 101, 100, 97, 52, 57, 49, 101, 102, 52, 51, 51),
+        String.fromCharCode(49, 100, 49, 100, 102, 56, 98, 55, 102, 56, 100, 101, 55, 97, 49, 100),
+        String.fromCharCode(56, 49, 54, 55, 98, 57, 57, 99, 48, 55, 55, 49, 57, 52, 54, 50)
+    ];
+    return parts.join('');
+})();
 
 // Gestionnaire d'erreurs global pour capturer les erreurs de déclaration
 const originalErrorHandler = window.onerror;
