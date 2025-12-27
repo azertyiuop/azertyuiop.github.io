@@ -7,66 +7,82 @@
     <meta name="googlebot" content="noindex, nofollow">
     <meta name="bingbot" content="noindex, nofollow">
     <meta name="slurp" content="noindex, nofollow">
-    <title>Configuration Admin - Liens Telegram</title>
+    <title>Configuration Admin - ABD PLAYER</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="login-container">
-            <header>
-                <h1>⚙️ Configuration Admin</h1>
-                <p class="subtitle">Définissez vos identifiants d'administration</p>
-            </header>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-wrapper">
+                <div>
+                    <h1 class="logo">⚙️ Configuration Admin</h1>
+                    <p class="tagline">Définissez vos identifiants d'administration</p>
+                </div>
+            </div>
+        </header>
 
-            <div class="login-section">
-                <form id="setupForm" class="login-form">
-                    <div class="form-group">
-                        <label for="username">Nom d'utilisateur</label>
-                        <input type="text" id="username" placeholder="Choisissez un nom d'utilisateur" required autofocus>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Mot de passe</label>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <input type="password" id="password" placeholder="Choisissez un mot de passe" required style="flex: 1;">
-                            <button type="button" onclick="togglePasswordVisibility()" class="btn-generate" style="padding: 12px 20px; background: var(--text-secondary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; white-space: nowrap;">
-                                👁️ Voir
-                            </button>
-                            <button type="button" onclick="copyPassword()" class="btn-generate" id="copyBtn" style="padding: 12px 20px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; white-space: nowrap;">
-                                📋 Copier
-                            </button>
-                            <button type="button" onclick="generatePassword()" class="btn-generate" style="padding: 12px 20px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; white-space: nowrap;">
-                                🎲 Générer
-                            </button>
+        <main class="main-content">
+            <section class="admin-panel">
+                <h2>🔐 Créer un compte administrateur</h2>
+                <form id="setupForm" class="stream-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">👤 Nom d'utilisateur</label>
+                            <input type="text" id="username" placeholder="Choisissez un nom d'utilisateur" required autofocus>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">Confirmer le mot de passe</label>
-                        <input type="password" id="confirmPassword" placeholder="Retapez le mot de passe" required>
+
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="password">🔒 Mot de passe</label>
+                            <div style="display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap;">
+                                <input type="password" id="password" placeholder="Choisissez un mot de passe" required style="flex: 1; min-width: 250px;">
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <button type="button" onclick="togglePasswordVisibility()" class="btn btn-outline" style="white-space: nowrap;">
+                                        👁️ Voir
+                                    </button>
+                                    <button type="button" onclick="copyPassword()" class="btn" id="copyBtn" style="background: var(--success); color: white; white-space: nowrap;">
+                                        📋 Copier
+                                    </button>
+                                    <button type="button" onclick="generatePassword()" class="btn btn-primary" style="white-space: nowrap;">
+                                        🎲 Générer
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="streamNameError" class="error-message" style="display: none;"></div>
+                        </div>
                     </div>
-                    <button type="submit" class="btn-primary">
-                        <span>💾 Enregistrer les identifiants</span>
-                    </button>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="confirmPassword">🔒 Confirmer le mot de passe</label>
+                            <input type="password" id="confirmPassword" placeholder="Retapez le mot de passe" required>
+                        </div>
+                    </div>
+
                     <div id="setupMessage" class="error-message" style="display: none;"></div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        💾 Enregistrer les identifiants
+                    </button>
                 </form>
+
                 <div class="login-hint">
                     <p>⚠️ Ces identifiants seront utilisés pour accéder au panel admin</p>
                     <p>⚠️ Assurez-vous de les noter quelque part en sécurité</p>
                 </div>
-            </div>
+            </section>
 
             <div class="login-footer">
                 <a href="index.html" class="back-link">← Retour à l'accueil</a>
             </div>
-        </div>
+        </main>
     </div>
 
-    <!-- Loader (doit être chargé en premier) -->
     <script src="loader.js"></script>
-    
-    <!-- Fichiers chiffrés (seront déchiffrés automatiquement) -->
     <script data-enc="config.js.enc.js"></script>
     <script data-enc="protection.js.enc.js"></script>
     <script data-enc="auth.js.enc.js"></script>
@@ -80,15 +96,15 @@
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 confirmInput.type = 'text';
-                toggleBtn.textContent = '🙈 Cacher';
+                toggleBtn.innerHTML = '🙈 Cacher';
             } else {
                 passwordInput.type = 'password';
                 confirmInput.type = 'password';
-                toggleBtn.textContent = '👁️ Voir';
+                toggleBtn.innerHTML = '👁️ Voir';
             }
         }
         
-        // Fonction pour copier le mot de passe dans le presse-papiers
+        // Fonction pour copier le mot de passe
         async function copyPassword() {
             const passwordInput = document.getElementById('password');
             const password = passwordInput.value;
@@ -106,13 +122,10 @@
             }
             
             try {
-                // Utiliser l'API Clipboard moderne si disponible
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     await navigator.clipboard.writeText(password);
-                    // Feedback visuel
-                    const originalText = copyBtn.textContent;
-                    copyBtn.textContent = '✅ Copié !';
-                    copyBtn.style.background = '#10b981';
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '✅ Copié !';
                     
                     const messageDiv = document.getElementById('setupMessage');
                     messageDiv.textContent = '✅ Mot de passe copié dans le presse-papiers !';
@@ -120,12 +133,10 @@
                     messageDiv.style.display = 'block';
                     
                     setTimeout(() => {
-                        copyBtn.textContent = originalText;
-                        copyBtn.style.background = '#10b981';
+                        copyBtn.innerHTML = originalText;
                         messageDiv.style.display = 'none';
                     }, 2000);
                 } else {
-                    // Fallback pour les navigateurs plus anciens
                     const textArea = document.createElement('textarea');
                     textArea.value = password;
                     textArea.style.position = 'fixed';
@@ -135,9 +146,8 @@
                     
                     try {
                         document.execCommand('copy');
-                        const originalText = copyBtn.textContent;
-                        copyBtn.textContent = '✅ Copié !';
-                        copyBtn.style.background = '#10b981';
+                        const originalText = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '✅ Copié !';
                         
                         const messageDiv = document.getElementById('setupMessage');
                         messageDiv.textContent = '✅ Mot de passe copié dans le presse-papiers !';
@@ -145,8 +155,7 @@
                         messageDiv.style.display = 'block';
                         
                         setTimeout(() => {
-                            copyBtn.textContent = originalText;
-                            copyBtn.style.background = '#10b981';
+                            copyBtn.innerHTML = originalText;
                             messageDiv.style.display = 'none';
                         }, 2000);
                     } catch (err) {
@@ -167,46 +176,39 @@
             }
         }
         
-        // Fonction pour générer un mot de passe aléatoire
+        // Fonction pour générer un mot de passe
         function generatePassword() {
-            const length = 16; // Longueur du mot de passe
+            const length = 16;
             const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
             let password = '';
             
-            // S'assurer qu'il y a au moins une majuscule, une minuscule, un chiffre et un caractère spécial
-            password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)]; // Majuscule
-            password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)]; // Minuscule
-            password += '0123456789'[Math.floor(Math.random() * 10)]; // Chiffre
-            password += '!@#$%^&*'[Math.floor(Math.random() * 8)]; // Caractère spécial
+            password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)];
+            password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
+            password += '0123456789'[Math.floor(Math.random() * 10)];
+            password += '!@#$%^&*'[Math.floor(Math.random() * 8)];
             
-            // Remplir le reste avec des caractères aléatoires
             for (let i = password.length; i < length; i++) {
                 password += charset[Math.floor(Math.random() * charset.length)];
             }
             
-            // Mélanger le mot de passe
             password = password.split('').sort(() => Math.random() - 0.5).join('');
             
             const passwordInput = document.getElementById('password');
             const confirmInput = document.getElementById('confirmPassword');
             
-            // Mettre à jour les champs
             passwordInput.value = password;
             confirmInput.value = password;
             
-            // Afficher le mot de passe généré automatiquement
             passwordInput.type = 'text';
             confirmInput.type = 'text';
             
-            // Mettre à jour le bouton "Voir"
             const toggleBtn = document.querySelector('button[onclick="togglePasswordVisibility()"]');
             if (toggleBtn) {
-                toggleBtn.textContent = '🙈 Cacher';
+                toggleBtn.innerHTML = '🙈 Cacher';
             }
             
-            // Afficher le mot de passe dans le message
             const messageDiv = document.getElementById('setupMessage');
-            messageDiv.innerHTML = '✅ Mot de passe généré : <strong style="font-family: monospace; font-size: 1.1em; background: rgba(74, 158, 255, 0.2); padding: 4px 8px; border-radius: 4px;">' + password + '</strong>';
+            messageDiv.innerHTML = '✅ Mot de passe généré : <strong style="font-family: monospace; font-size: 1.1em; background: rgba(99, 102, 241, 0.2); padding: 6px 12px; border-radius: 6px; display: inline-block; margin-top: 8px;">' + password + '</strong>';
             messageDiv.className = 'success-message';
             messageDiv.style.display = 'block';
             
@@ -215,7 +217,7 @@
             }, 8000);
         }
         
-        // Attendre que setupCredentials soit disponible (fichiers déchiffrés)
+        // Attendre que setupCredentials soit disponible
         function waitForSetupCredentials(callback, maxAttempts = 100) {
             let attempts = 0;
             const checkInterval = setInterval(() => {
@@ -225,9 +227,9 @@
                     callback();
                 } else if (attempts >= maxAttempts) {
                     clearInterval(checkInterval);
-                    console.error('Erreur: setupCredentials non disponible après ' + maxAttempts + ' tentatives');
+                    console.error('Erreur: setupCredentials non disponible');
                     const messageDiv = document.getElementById('setupMessage');
-                    messageDiv.textContent = '❌ Erreur: Les fichiers n\'ont pas pu être chargés. Vérifiez la console (F12) et que decrypt.js contient la bonne clé.';
+                    messageDiv.textContent = '❌ Erreur: Les fichiers n\'ont pas pu être chargés. Vérifiez la console (F12).';
                     messageDiv.className = 'error-message';
                     messageDiv.style.display = 'block';
                 }
@@ -261,7 +263,6 @@
                         return;
                     }
                     
-                    // Créer les identifiants
                     if (setupCredentials(username, password)) {
                         showMessage('✅ Identifiants créés avec succès ! Redirection...', 'success');
                         setTimeout(() => {
@@ -283,4 +284,3 @@
     </script>
 </body>
 </html>
-
