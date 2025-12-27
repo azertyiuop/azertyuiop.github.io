@@ -7,10 +7,10 @@ const ENCRYPTED_DIR = 'encrypted'; // Dossier contenant les fichiers chiffrés
 (function() {
     'use strict';
     // Parties de la clé (obscurcies)
-    const _p1 = 'ed8a646633c3c98d';
-    const _p2 = '79c0ceda491ef433';
-    const _p3 = '1d1df8b7f8de7a1d';
-    const _p4 = '8167b99c07719462';
+    const _p1 = '128ab928cd8487b2';
+    const _p2 = '7a80e03e38eb53e6';
+    const _p3 = '3258be6af086a24c';
+    const _p4 = '54d3c934b3975355';
     
     // Reconstituer la clé (obscurcie avec des opérations)
     window._ENCRYPTION_KEY = _p1 + _p2 + _p3 + _p4;
@@ -20,10 +20,10 @@ const ENCRYPTED_DIR = 'encrypted'; // Dossier contenant les fichiers chiffrés
 const ENCRYPTION_KEY = window._ENCRYPTION_KEY || (function() {
     // Fallback si la clé n'a pas été définie
     const parts = [
-        String.fromCharCode(101, 100, 56, 97, 54, 52, 54, 54, 51, 51, 99, 51, 99, 57, 56, 100),
-        String.fromCharCode(55, 57, 99, 48, 99, 101, 100, 97, 52, 57, 49, 101, 102, 52, 51, 51),
-        String.fromCharCode(49, 100, 49, 100, 102, 56, 98, 55, 102, 56, 100, 101, 55, 97, 49, 100),
-        String.fromCharCode(56, 49, 54, 55, 98, 57, 57, 99, 48, 55, 55, 49, 57, 52, 54, 50)
+        String.fromCharCode(49, 50, 56, 97, 98, 57, 50, 56, 99, 100, 56, 52, 56, 55, 98, 50),
+        String.fromCharCode(55, 97, 56, 48, 101, 48, 51, 101, 51, 56, 101, 98, 53, 51, 101, 54),
+        String.fromCharCode(51, 50, 53, 56, 98, 101, 54, 97, 102, 48, 56, 54, 97, 50, 52, 99),
+        String.fromCharCode(53, 52, 100, 51, 99, 57, 51, 52, 98, 51, 57, 55, 53, 51, 53, 53)
     ];
     return parts.join('');
 })();
