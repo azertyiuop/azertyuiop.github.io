@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+    <meta name="googlebot" content="noindex, nofollow">
+    <meta name="bingbot" content="noindex, nofollow">
+    <meta name="slurp" content="noindex, nofollow">
+    <title>Configuration Admin - Liens Telegram</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <header>
+                <h1>⚙️ Configuration Admin</h1>
+                <p class="subtitle">Définissez vos identifiants d'administration</p>
+            </header>
+
+            <div class="login-section">
+                <form id="setupForm" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" id="username" placeholder="Choisissez un nom d'utilisateur" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="password" id="password" placeholder="Choisissez un mot de passe" required style="flex: 1;">
+                            <button type="button" onclick="togglePasswordVisibility()" class="btn-generate" style="padding: 12px 20px; background: var(--text-secondary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; white-space: nowrap;">
+                                👁️ Voir
+                            </button>
+                            <button type="button" onclick="generatePassword()" class="btn-generate" style="padding: 12px 20px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; white-space: nowrap;">
+                                🎲 Générer
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirmer le mot de passe</label>
+                        <input type="password" id="confirmPassword" placeholder="Retapez le mot de passe" required>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <span>💾 Enregistrer les identifiants</span>
+                    </button>
+                    <div id="setupMessage" class="error-message" style="display: none;"></div>
+                </form>
+                <div class="login-hint">
+                    <p>⚠️ Ces identifiants seront utilisés pour accéder au panel admin</p>
+                    <p>⚠️ Assurez-vous de les noter quelque part en sécurité</p>
+                </div>
+            </div>
+
+            <div class="login-footer">
+                <a href="index.html" class="back-link">← Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Déchiffreur (doit être chargé en premier) -->
+    <script src="decrypt.js"></script>
+    
+    <!-- Fichiers chiffrés (seront déchiffrés automatiquement) -->
+    <script data-enc="config.js.enc.js"></script>
+    <script data-enc="protection.js.enc.js"></script>
+    <script data-enc="auth.js.enc.js"></script>
+    <script>
+        // Fonction pour afficher/masquer le mot de passe
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const confirmInput = document.getElementById('confirmPassword');
+            const toggleBtn = event.target;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                confirmInput.type = 'text';
+                toggleBtn.textContent = '🙈 Cacher';
+            } else {
+                passwordInput.type = 'password';
+                confirmInput.type = 'password';
+                toggleBtn.textContent = '👁️ Voir';
+            }
+        }
+        
+        // Fonction pour générer un mot de passe aléatoire
+        function generatePassword() {
+            const length = 16; // Longueur du mot de passe
+            const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+            let password = '';
+            
+            // S'assurer qu'il y a au moins une majuscule, une minuscule, un chiffre et un caractère spécial
+            password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)]; // Majuscule
+            password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)]; // Minuscule
+            password += '0123456789'[Math.floor(Math.random() * 10)]; // Chiffre
+            password += '!@#$%^&*'[Math.floor(Math.random() * 8)]; // Caractère spécial
+            
+            // Remplir le reste avec des caractères aléatoires
+            for (let i = password.length; i < length; i++) {
+                password += charset[Math.floor(Math.random() * charset.length)];
+            }
+            
+            // Mélanger le mot de passe
+            password = password.split('').sort(() => Math.random() - 0.5).join('');
+            
+            const passwordInput = document.getElementById('password');
+            const confirmInput = document.getElementById('confirmPassword');
+            
+            // Mettre à jour les champs
+            passwordInput.value = password;
+            confirmInput.value = password;
+            
+            // Afficher le mot de passe généré automatiquement
+            passwordInput.type = 'text';
+            confirmInput.type = 'text';
+            
+            // Mettre à jour le bouton "Voir"
+            const toggleBtn = document.querySelector('button[onclick="togglePasswordVisibility()"]');
+            if (toggleBtn) {
+                toggleBtn.textContent = '🙈 Cacher';
+            }
+            
+            // Afficher le mot de passe dans le message
+            const messageDiv = document.getElementById('setupMessage');
+            messageDiv.innerHTML = '✅ Mot de passe généré : <strong style="font-family: monospace; font-size: 1.1em; background: rgba(74, 158, 255, 0.2); padding: 4px 8px; border-radius: 4px;">' + password + '</strong>';
+            messageDiv.className = 'success-message';
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 8000);
+        }
+        
+        // Attendre que setupCredentials soit disponible (fichiers déchiffrés)
+        function waitForSetupCredentials(callback, maxAttempts = 100) {
+            let attempts = 0;
+            const checkInterval = setInterval(() => {
+                attempts++;
+                if (typeof setupCredentials !== 'undefined') {
+                    clearInterval(checkInterval);
+                    callback();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(checkInterval);
+                    console.error('Erreur: setupCredentials non disponible après ' + maxAttempts + ' tentatives');
+                    const messageDiv = document.getElementById('setupMessage');
+                    messageDiv.textContent = '❌ Erreur: Les fichiers n\'ont pas pu être chargés. Vérifiez la console (F12) et que decrypt.js contient la bonne clé.';
+                    messageDiv.className = 'error-message';
+                    messageDiv.style.display = 'block';
+                }
+            }, 100);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            waitForSetupCredentials(() => {
+                const setupForm = document.getElementById('setupForm');
+                const messageDiv = document.getElementById('setupMessage');
+                
+                setupForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    
+                    if (!username || !password) {
+                        showMessage('Veuillez remplir tous les champs', 'error');
+                        return;
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        showMessage('Les mots de passe ne correspondent pas', 'error');
+                        return;
+                    }
+                    
+                    if (password.length < 4) {
+                        showMessage('Le mot de passe doit contenir au moins 4 caractères', 'error');
+                        return;
+                    }
+                    
+                    // Créer les identifiants
+                    if (setupCredentials(username, password)) {
+                        showMessage('✅ Identifiants créés avec succès ! Redirection...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'admin.html';
+                        }, 1500);
+                    } else {
+                        showMessage('Erreur lors de la création des identifiants', 'error');
+                    }
+                });
+                
+                function showMessage(message, type) {
+                    messageDiv.textContent = message;
+                    messageDiv.innerHTML = message;
+                    messageDiv.style.display = 'block';
+                    messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

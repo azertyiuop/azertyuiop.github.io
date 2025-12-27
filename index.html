@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+    <meta name="googlebot" content="noindex, nofollow">
+    <meta name="bingbot" content="noindex, nofollow">
+    <meta name="slurp" content="noindex, nofollow">
+    <title>Liens Telegram - Matchs de Foot</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚽ Liens Telegram - Matchs de Foot</h1>
+            <p class="subtitle">Répertoriez et gérez vos liens Telegram pour suivre les matchs</p>
+        </header>
+
+        <div class="links-section">
+            <div class="section-header">
+                <h2>Mes liens sauvegardés</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Tous</button>
+                    <button class="filter-btn" data-filter="today">Aujourd'hui</button>
+                    <button class="filter-btn" data-filter="upcoming">À venir</button>
+                    <button class="filter-btn" data-filter="past">Passés</button>
+                </div>
+            </div>
+            <div id="linksList" class="links-list">
+                <!-- Les liens seront ajoutés ici dynamiquement -->
+            </div>
+            <div id="emptyState" class="empty-state">
+                <div class="empty-icon">📋</div>
+                <p>Aucun lien enregistré pour le moment</p>
+                <p class="empty-hint">Ajoutez votre premier lien ci-dessus</p>
+            </div>
+        </div>
+
+        <div class="social-section">
+            <h2>Rejoignez-nous</h2>
+            <div class="social-links">
+                <a href="#" id="discordLink" target="_blank" rel="noopener noreferrer" class="social-btn discord-btn">
+                    <span>💬 Discord</span>
+                </a>
+                <a href="#" id="xLink" target="_blank" rel="noopener noreferrer" class="social-btn x-btn">
+                    <span>𝕏 X (Twitter)</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Déchiffreur (doit être chargé en premier) -->
+    <script src="decrypt.js"></script>
+    
+    <!-- Fichiers chiffrés (seront déchiffrés automatiquement) -->
+    <script data-enc="config.js.enc.js"></script>
+    <script data-enc="protection.js.enc.js"></script>
+    <script data-enc="common.js.enc.js"></script>
+    <script data-enc="script.js.enc.js"></script>
+</body>
+</html>
+
