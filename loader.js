@@ -2,10 +2,10 @@
     'use strict';
     
     const keyParts = [
-        '7330bc9973aad497',
-        '45428a1ff7c7fb11',
-        '8c43290979c4c81f',
-        '9c10865cc63f9e60'
+        'c1d2109d39b6623c',
+        'cc11bb19ac84ecfa',
+        'c2cac886fe56d7bf',
+        '8ca0b05e4e75b053'
     ];
     const LOADER_KEY = keyParts.join('');
     const ENCRYPTED_DIR = 'encrypted';
