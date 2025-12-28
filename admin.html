@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
-    <title>Admin - ABD PLAYER</title>
+    <title>PANEL D'ADMINISTRATION</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,6 +60,48 @@
         </header>
 
         <main class="admin-content">
+            <section class="admin-panel stats-panel">
+                <h2>📊 Statistiques en Temps Réel</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Visiteurs Instantanés</div>
+                            <div class="stat-value" id="activeVisitors">0</div>
+                            <div class="stat-description">Actifs (5 dernières min)</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Visiteurs Aujourd'hui</div>
+                            <div class="stat-value" id="todayVisitors">0</div>
+                            <div class="stat-description">Visites uniques</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🖱️</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Clics Aujourd'hui</div>
+                            <div class="stat-value" id="todayClicks">0</div>
+                            <div class="stat-description">Sur les liens Telegram</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total des Clics</div>
+                            <div class="stat-value" id="totalClicks">0</div>
+                            <div class="stat-description">Depuis le début</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats-update-info">
+                    <span class="update-indicator" id="updateIndicator">🟢</span>
+                    <span id="lastUpdate">Mise à jour en cours...</span>
+                </div>
+            </section>
+
             <section class="admin-panel">
                 <h2>➕ Ajouter un Stream</h2>
                 <form id="streamForm" class="stream-form">
