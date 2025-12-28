@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script>
         // Initialiser le thème immédiatement pour éviter le flash
         (function() {
@@ -44,6 +47,18 @@
 <body>
     <div id="loadingMessage" style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #0a0a0a; color: #fff; font-family: 'Poppins', sans-serif; flex-direction: column; gap: 20px;">
         <div style="font-size: 24px;">🔐 Vérification...</div>
+    </div>
+    
+    <!-- Notification popup pour nouvelles visites -->
+    <div id="visitNotification" class="visit-notification" style="display: none;">
+        <div class="visit-notification-content">
+            <div class="visit-notification-icon">👤</div>
+            <div class="visit-notification-text">
+                <strong>Nouveau visiteur !</strong>
+                <span id="visitNotificationTime"></span>
+            </div>
+            <button class="visit-notification-close" onclick="closeVisitNotification()">×</button>
+        </div>
     </div>
     
     <div class="app-container" style="display: none;">
@@ -225,6 +240,37 @@
             </section>
 
             <section class="admin-panel">
+                <h2>📢 Messages aux Visiteurs</h2>
+                <form id="messageForm" class="stream-form">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="messageText">💬 Message</label>
+                            <textarea id="messageText" rows="3" placeholder="Entrez votre message important à afficher aux visiteurs..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="messageType">🎨 Type de message</label>
+                            <select id="messageType">
+                                <option value="info">ℹ️ Information</option>
+                                <option value="success">✅ Succès</option>
+                                <option value="warning">⚠️ Avertissement</option>
+                                <option value="error">❌ Erreur</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="messageActive" checked>
+                                Message actif (affiché aux visiteurs)
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">📤 Envoyer le Message</button>
+                </form>
+                <div id="messagesList" class="messages-list" style="margin-top: 24px;"></div>
+            </section>
+
+            <section class="admin-panel">
                 <h2>🌐 Liens Sociaux</h2>
                 <form id="socialForm" class="stream-form">
                     <div class="form-row">
@@ -257,6 +303,19 @@
                 </div>
             </section>
         </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; 2024 ABD PLAYER. Tous droits réservés.</p>
+                <div class="footer-links">
+                    <a href="index.html">Accueil</a>
+                    <span>•</span>
+                    <a href="legal.html">Mentions Légales</a>
+                    <span>•</span>
+                    <a href="legal.html#dmca">DMCA</a>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <!-- Modal d'édition -->
@@ -330,6 +389,7 @@
     </div>
 
     <script src="loader.js"></script>
+    <script src="firebase-storage.js"></script>
     <script data-enc="config.js.enc.js"></script>
     <script data-enc="protection.js.enc.js"></script>
     <script data-enc="auth.js.enc.js"></script>
