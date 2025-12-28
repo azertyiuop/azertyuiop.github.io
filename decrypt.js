@@ -7,10 +7,10 @@ const ENCRYPTED_DIR = 'encrypted'; // Dossier contenant les fichiers chiffrés
 (function() {
     'use strict';
     // Parties de la clé (obscurcies)
-    const _p1 = '0f9aa47e9f9bee25';
-    const _p2 = 'fa1d8e679915841a';
-    const _p3 = 'e649521553021e9d';
-    const _p4 = '8cba768934ef5c42';
+    const _p1 = '57b9c6980b620c3f';
+    const _p2 = 'efa6d9cd50eb4f23';
+    const _p3 = '255f35be77b660f7';
+    const _p4 = '7199ddb76732cfc1';
     
     // Reconstituer la clé (obscurcie avec des opérations)
     window._ENCRYPTION_KEY = _p1 + _p2 + _p3 + _p4;
