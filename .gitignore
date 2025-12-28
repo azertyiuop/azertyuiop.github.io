@@ -2,14 +2,14 @@
 data.json
 *.log
 
-# Configuration (contient le token GitHub)
+# Configuration (contient les tokens GitHub et Firebase - SENSIBLE)
 config.js
 
 # Fichiers originaux (ne pas commiter)
 *.original
 *.js.original
 
-# Clé de chiffrement (NE JAMAIS COMMITER)
+# Clé de chiffrement (NE JAMAIS COMMITER - TRÈS SENSIBLE)
 .encryption_key
 encrypted/.encryption_key
 encryption_key.txt
@@ -20,10 +20,17 @@ common.js
 admin.js
 script.js
 protection.js
-config.js
+decrypt.js
 encrypt.js
 
 # Fichiers de déploiement
 .netlify/
 .vercel/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
 
