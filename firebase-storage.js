@@ -1,8 +1,4 @@
-
-
-
 const AUTH_STORAGE_KEY = 'admin_auth';
-
 function simpleHash(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -214,23 +210,19 @@ async function requireAuth() {
     if (container) {
         container.style.display = 'none';
     }
-
     let attempts = 0;
     const maxAttempts = 3;
     
     while (attempts < maxAttempts) {
         const credentials = promptCredentials();
-        
-        if (credentials === null) {
+                if (credentials === null) {
 
             window.location.href = 'index.html';
             return false;
         }
-        
         const isValid = await checkCredentials(credentials.username, credentials.password);
         if (isValid) {
             setAuthenticated();
-
             const appContainer = document.querySelector('.app-container');
             const loadingMsg = document.getElementById('loadingMessage');
             if (appContainer) {
