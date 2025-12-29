@@ -106,19 +106,27 @@
                     const enabled = data.setupPageEnabled !== false; // Par défaut activé
                     
                     if (!enabled) {
-                        // Afficher un message et rediriger
-                        document.body.innerHTML = `
-                            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: var(--bg-dark); color: var(--text-primary); font-family: 'Poppins', sans-serif; flex-direction: column; gap: 24px; padding: 24px; text-align: center;">
-                                <div style="font-size: 4rem;">🔒</div>
-                                <h1 style="font-size: 2rem; font-weight: 700; margin: 0;">Accès désactivé</h1>
-                                <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 500px;">
-                                    La page de configuration a été désactivée par l'administrateur.
-                                </p>
-                                <a href="index.html" style="padding: 14px 28px; background: var(--gradient-primary); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s;">
-                                    Retour à l'accueil
-                                </a>
-                            </div>
-                        `;
+                        // Masquer le contenu et afficher un message
+                        const mainContent = document.querySelector('.main-content');
+                        const header = document.querySelector('.app-header');
+                        
+                        if (mainContent) {
+                            mainContent.innerHTML = `
+                                <section class="admin-panel" style="text-align: center; padding: 60px 24px;">
+                                    <div style="font-size: 5rem; margin-bottom: 24px;">🔒</div>
+                                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">
+                                        Accès désactivé
+                                    </h2>
+                                    <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 500px; margin: 0 auto 32px; line-height: 1.6;">
+                                        La page de configuration a été désactivée par l'administrateur.<br>
+                                        Vous ne pouvez pas créer ou modifier un compte administrateur.
+                                    </p>
+                                    <a href="index.html" style="display: inline-block; padding: 14px 28px; background: var(--gradient-primary); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);">
+                                        🏠 Retour à l'accueil
+                                    </a>
+                                </section>
+                            `;
+                        }
                         return false;
                     }
                     return true;
