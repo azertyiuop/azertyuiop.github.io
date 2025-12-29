@@ -21,7 +21,18 @@
     </script>
 </head>
 <body>
-    <div class="app-container">
+    <!-- Loader pendant la vérification -->
+    <div id="setupLoader" style="display: flex; justify-content: center; align-items: center; height: 100vh; background: var(--bg-dark); color: var(--text-primary); font-family: 'Inter', sans-serif; flex-direction: column; gap: 20px; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;">
+        <div style="font-size: 24px;">🔐 Vérification de l'accès...</div>
+        <div style="width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    </div>
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+
+    <div class="app-container" id="appContainer" style="display: none;">
         <header class="app-header">
             <div class="header-wrapper">
                 <div>
@@ -123,52 +134,105 @@
     <script data-enc="common.js.enc.js"></script>
     <script data-enc="auth.js.enc.js"></script>
     <script>
-        // Vérifier si la page setup est activée
+        // Vérifier si la page setup est activée - BLOQUANT
         async function checkSetupPageEnabled() {
+            const loader = document.getElementById('setupLoader');
+            const appContainer = document.getElementById('appContainer');
+            const disabledMsg = document.getElementById('disabledMessage');
+            const setupForm = document.getElementById('setupFormSection');
+            
             try {
-                // Attendre que loadData soit disponible
+                // Attendre que loadData soit disponible (jusqu'à 10 secondes)
                 let attempts = 0;
-                while (typeof loadData === 'undefined' && attempts < 50) {
+                while (typeof loadData === 'undefined' && attempts < 100) {
                     await new Promise(resolve => setTimeout(resolve, 100));
                     attempts++;
                 }
                 
                 if (typeof loadData === 'function') {
                     const data = await loadData();
-                    const enabled = data.setupPageEnabled !== false; // Par défaut activé
+                    const enabled = data.setupPageEnabled !== false;
                     
-                    const disabledMsg = document.getElementById('disabledMessage');
-                    const setupForm = document.getElementById('setupFormSection');
+                    // Masquer le loader
+                    if (loader) loader.style.display = 'none';
                     
                     if (!enabled) {
-                        // Afficher le message de désactivation et masquer le formulaire
+                        // PAGE DÉSACTIVÉE - Afficher uniquement le message d'erreur
+                        if (appContainer) appContainer.style.display = 'block';
                         if (disabledMsg) disabledMsg.style.display = 'block';
                         if (setupForm) setupForm.style.display = 'none';
+                        
+                        // Empêcher toute interaction avec le formulaire
+                        const form = document.getElementById('setupForm');
+                        if (form) {
+                            form.style.pointerEvents = 'none';
+                            form.style.opacity = '0.3';
+                        }
+                        
+                        // Rediriger après 5 secondes si l'utilisateur ne fait rien
+                        setTimeout(() => {
+                            if (confirm('La page de configuration est désactivée. Voulez-vous retourner à l\'accueil ?')) {
+                                window.location.href = 'index.html';
+                            }
+                        }, 5000);
+                        
                         return false;
                     } else {
-                        // Afficher le formulaire et masquer le message
+                        // PAGE ACTIVÉE - Afficher le formulaire
+                        if (appContainer) appContainer.style.display = 'block';
                         if (disabledMsg) disabledMsg.style.display = 'none';
                         if (setupForm) setupForm.style.display = 'block';
                         return true;
                     }
+                } else {
+                    // Si loadData n'est pas disponible après 10 secondes, considérer comme activé par défaut
+                    console.warn('loadData non disponible, activation par défaut');
+                    if (loader) loader.style.display = 'none';
+                    if (appContainer) appContainer.style.display = 'block';
+                    if (disabledMsg) disabledMsg.style.display = 'none';
+                    if (setupForm) setupForm.style.display = 'block';
+                    return true;
                 }
-                // Si loadData n'est pas disponible, afficher le formulaire par défaut
-                const setupForm = document.getElementById('setupFormSection');
-                if (setupForm) setupForm.style.display = 'block';
-                return true;
             } catch (error) {
                 console.error('Erreur lors de la vérification:', error);
-                // En cas d'erreur, afficher le formulaire par défaut
-                const setupForm = document.getElementById('setupFormSection');
+                // En cas d'erreur, masquer le loader et afficher le formulaire par défaut
+                if (loader) loader.style.display = 'none';
+                if (appContainer) appContainer.style.display = 'block';
+                if (disabledMsg) disabledMsg.style.display = 'none';
                 if (setupForm) setupForm.style.display = 'block';
                 return true;
             }
         }
         
-        // Vérifier au chargement de la page
+        // Vérifier IMMÉDIATEMENT au chargement de la page
         (async function() {
-            await checkSetupPageEnabled();
+            // Empêcher l'affichage du contenu avant la vérification
+            document.body.style.overflow = 'hidden';
+            
+            const enabled = await checkSetupPageEnabled();
+            
+            // Réactiver le scroll si nécessaire
+            if (enabled) {
+                document.body.style.overflow = '';
+            }
         })();
+        
+        // Empêcher la soumission du formulaire si la page est désactivée
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('setupForm');
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    // Vérifier à nouveau avant la soumission
+                    const data = await loadData();
+                    if (data.setupPageEnabled === false) {
+                        e.preventDefault();
+                        alert('❌ La page de configuration a été désactivée. Vous ne pouvez pas créer de compte.');
+                        window.location.href = 'index.html';
+                        return false;
+                    }
+                });
+            }
+        });
     </script>
     <script>
         // Fonction pour afficher/masquer le mot de passe
@@ -327,6 +391,21 @@
                 
                 setupForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
+                    
+                    // VÉRIFICATION CRITIQUE : Vérifier à nouveau si la page est activée
+                    try {
+                        const data = await loadData();
+                        if (data.setupPageEnabled === false) {
+                            alert('❌ La page de configuration a été désactivée. Vous ne pouvez pas créer de compte.');
+                            window.location.href = 'index.html';
+                            return false;
+                        }
+                    } catch (error) {
+                        console.error('Erreur lors de la vérification:', error);
+                        // En cas d'erreur, bloquer par sécurité
+                        alert('❌ Erreur lors de la vérification. Accès refusé.');
+                        return false;
+                    }
                     
                     const username = document.getElementById('username').value.trim();
                     const password = document.getElementById('password').value;
