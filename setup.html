@@ -35,7 +35,32 @@
         </header>
 
         <main class="main-content">
-            <section class="admin-panel">
+            <!-- Message de désactivation -->
+            <section id="disabledMessage" class="admin-panel" style="display: none; text-align: center; padding: 60px 24px;">
+                <div style="font-size: 5rem; margin-bottom: 24px; animation: shake 0.5s ease-in-out;">❌</div>
+                <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: #ff4444;">
+                    Erreur : Accès désactivé
+                </h2>
+                <div style="background: rgba(255, 68, 68, 0.1); border: 2px solid #ff4444; border-radius: 12px; padding: 24px; max-width: 500px; margin: 0 auto 32px;">
+                    <p style="font-size: 1.1rem; color: var(--text-primary); line-height: 1.6; margin: 0;">
+                        <strong>⚠️ La page de configuration a été désactivée par l'administrateur.</strong><br><br>
+                        Vous ne pouvez pas créer ou modifier un compte administrateur depuis cette page.
+                    </p>
+                </div>
+                <a href="index.html" style="display: inline-block; padding: 14px 28px; background: var(--gradient-primary); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);">
+                    🏠 Retour à l'accueil
+                </a>
+            </section>
+            <style>
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-10px); }
+                    75% { transform: translateX(10px); }
+                }
+            </style>
+            
+            <!-- Formulaire de setup (masqué par défaut jusqu'à vérification) -->
+            <section id="setupFormSection" class="admin-panel" style="display: none;">
                 <h2>🔐 Créer un compte administrateur</h2>
                 <form id="setupForm" class="stream-form">
                     <div class="form-row">
@@ -101,49 +126,48 @@
         // Vérifier si la page setup est activée
         async function checkSetupPageEnabled() {
             try {
+                // Attendre que loadData soit disponible
+                let attempts = 0;
+                while (typeof loadData === 'undefined' && attempts < 50) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+                
                 if (typeof loadData === 'function') {
                     const data = await loadData();
                     const enabled = data.setupPageEnabled !== false; // Par défaut activé
                     
+                    const disabledMsg = document.getElementById('disabledMessage');
+                    const setupForm = document.getElementById('setupFormSection');
+                    
                     if (!enabled) {
-                        // Masquer le contenu et afficher un message
-                        const mainContent = document.querySelector('.main-content');
-                        const header = document.querySelector('.app-header');
-                        
-                        if (mainContent) {
-                            mainContent.innerHTML = `
-                                <section class="admin-panel" style="text-align: center; padding: 60px 24px;">
-                                    <div style="font-size: 5rem; margin-bottom: 24px;">🔒</div>
-                                    <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">
-                                        Accès désactivé
-                                    </h2>
-                                    <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 500px; margin: 0 auto 32px; line-height: 1.6;">
-                                        La page de configuration a été désactivée par l'administrateur.<br>
-                                        Vous ne pouvez pas créer ou modifier un compte administrateur.
-                                    </p>
-                                    <a href="index.html" style="display: inline-block; padding: 14px 28px; background: var(--gradient-primary); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);">
-                                        🏠 Retour à l'accueil
-                                    </a>
-                                </section>
-                            `;
-                        }
+                        // Afficher le message de désactivation et masquer le formulaire
+                        if (disabledMsg) disabledMsg.style.display = 'block';
+                        if (setupForm) setupForm.style.display = 'none';
                         return false;
+                    } else {
+                        // Afficher le formulaire et masquer le message
+                        if (disabledMsg) disabledMsg.style.display = 'none';
+                        if (setupForm) setupForm.style.display = 'block';
+                        return true;
                     }
-                    return true;
                 }
-                return true; // Si la fonction n'est pas disponible, autoriser l'accès
+                // Si loadData n'est pas disponible, afficher le formulaire par défaut
+                const setupForm = document.getElementById('setupFormSection');
+                if (setupForm) setupForm.style.display = 'block';
+                return true;
             } catch (error) {
                 console.error('Erreur lors de la vérification:', error);
-                return true; // En cas d'erreur, autoriser l'accès par sécurité
+                // En cas d'erreur, afficher le formulaire par défaut
+                const setupForm = document.getElementById('setupFormSection');
+                if (setupForm) setupForm.style.display = 'block';
+                return true;
             }
         }
         
         // Vérifier au chargement de la page
         (async function() {
-            const enabled = await checkSetupPageEnabled();
-            if (!enabled) {
-                return; // Arrêter l'exécution si désactivé
-            }
+            await checkSetupPageEnabled();
         })();
     </script>
     <script>
