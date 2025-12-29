@@ -154,9 +154,33 @@
                         <div class="section-header-content-new">
                             <h2 class="section-title-new">
                                 <span class="section-icon-new">📊</span>
-                                Statistiques en Temps Réel
+                                Statistiques Avancées
                             </h2>
-                            <p class="section-subtitle-new">Surveillez l'activité de votre site en direct</p>
+                            <p class="section-subtitle-new">Analysez l'activité de votre site avec des filtres temporels</p>
+                        </div>
+                        <div class="stats-filters-new" style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <span>Période:</span>
+                                <select id="statsPeriod" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary);">
+                                    <option value="24h">24 dernières heures</option>
+                                    <option value="7d">7 derniers jours</option>
+                                    <option value="30d">30 derniers jours</option>
+                                    <option value="custom">Personnalisé</option>
+                                </select>
+                            </label>
+                            <div id="customDateRange" style="display: none; gap: 8px; align-items: center;">
+                                <input type="date" id="statsStartDate" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary);">
+                                <span>à</span>
+                                <input type="date" id="statsEndDate" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary);">
+                                <button onclick="applyCustomDateRange()" style="padding: 8px 16px; border-radius: 8px; background: var(--primary); color: white; border: none; cursor: pointer;">Appliquer</button>
+                            </div>
+                            <div id="dayNavigation" style="display: none; gap: 8px; align-items: center;">
+                                <button onclick="navigateStatsDay(-1)" style="padding: 8px 12px; border-radius: 8px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); cursor: pointer;">◀ Précédent</button>
+                                <span id="currentStatsDay" style="padding: 8px 12px; font-weight: 600; color: var(--text-primary);"></span>
+                                <button onclick="navigateStatsDay(1)" style="padding: 8px 12px; border-radius: 8px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); cursor: pointer;">Suivant ▶</button>
+                                <button onclick="resetStatsToToday()" style="padding: 8px 12px; border-radius: 8px; background: var(--primary); color: white; border: none; cursor: pointer;">Aujourd'hui</button>
+                            </div>
+                            <button onclick="exportStats()" style="padding: 8px 16px; border-radius: 8px; background: var(--success); color: white; border: none; cursor: pointer;">📥 Exporter</button>
                         </div>
                     </div>
                 
