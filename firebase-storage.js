@@ -1,34 +1,30 @@
-// Système de stockage Firebase Realtime Database
-// Remplace GitHub Gist - Gratuit et sans limite de rate
 
-// Initialisation Firebase (sera chargé depuis le CDN)
 let firebaseApp = null;
 let firebaseDatabase = null;
 let isFirebaseInitialized = false;
 
-// Fonction pour initialiser Firebase
+
 async function initFirebase() {
     if (isFirebaseInitialized && firebaseDatabase) {
         return firebaseDatabase;
     }
-    
-    // Vérifier si Firebase est chargé
+
     if (typeof firebase === 'undefined') {
         throw new Error('Firebase SDK non chargé. Veuillez inclure le script Firebase dans votre page.');
     }
     
-    // Vérifier la configuration
+
     if (!window.FIREBASE_CONFIG || !window.FIREBASE_CONFIG.databaseURL) {
         throw new Error('Configuration Firebase non trouvée. Veuillez configurer firebase-config.js');
     }
     
     try {
-        // Initialiser Firebase
+ 
         if (!firebaseApp) {
             firebaseApp = firebase.initializeApp(window.FIREBASE_CONFIG);
         }
         
-        // Obtenir la référence à la base de données
+
         firebaseDatabase = firebase.database();
         isFirebaseInitialized = true;
         
@@ -39,14 +35,14 @@ async function initFirebase() {
     }
 }
 
-// Fonction pour charger toutes les données depuis Firebase
+
 async function loadDataFromFirebase() {
     try {
         const db = await initFirebase();
         const snapshot = await db.ref('appData').once('value');
         const data = snapshot.val();
         
-        // Si pas de données, initialiser avec des valeurs par défaut
+
         if (!data) {
             const defaultData = {
                 links: [],
@@ -70,7 +66,7 @@ async function loadDataFromFirebase() {
     }
 }
 
-// Fonction pour sauvegarder toutes les données sur Firebase
+
 async function saveDataToFirebase(data) {
     try {
         const db = await initFirebase();
@@ -82,7 +78,6 @@ async function saveDataToFirebase(data) {
     }
 }
 
-// Fonction pour écouter les nouvelles visites en temps réel
 function listenToNewVisits(callback) {
     initFirebase().then(db => {
         // Écouter les nouvelles visites
@@ -97,7 +92,7 @@ function listenToNewVisits(callback) {
     });
 }
 
-// Fonction pour écouter les nouveaux messages admin
+
 function listenToAdminMessages(callback) {
     initFirebase().then(db => {
         db.ref('appData/adminMessages').on('value', (snapshot) => {
@@ -111,7 +106,7 @@ function listenToAdminMessages(callback) {
     });
 }
 
-// Fonction pour ajouter un message admin
+
 async function addAdminMessage(message) {
     try {
         const data = await loadDataFromFirebase();
@@ -127,7 +122,7 @@ async function addAdminMessage(message) {
         
         data.adminMessages.push(newMessage);
         
-        // Garder seulement les 50 derniers messages
+
         if (data.adminMessages.length > 50) {
             data.adminMessages = data.adminMessages.slice(-50);
         }
@@ -140,7 +135,7 @@ async function addAdminMessage(message) {
     }
 }
 
-// Fonction pour supprimer un message admin
+
 async function deleteAdminMessage(messageId) {
     try {
         const data = await loadDataFromFirebase();
@@ -154,7 +149,7 @@ async function deleteAdminMessage(messageId) {
     }
 }
 
-// Exposer les fonctions globalement
+
 window.initFirebase = initFirebase;
 window.loadDataFromFirebase = loadDataFromFirebase;
 window.saveDataToFirebase = saveDataToFirebase;
