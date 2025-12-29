@@ -101,9 +101,12 @@
     async function loadDecryptJs() {
         try {
             const filePath = ENCRYPTED_DIR + '/decrypt.js.enc.js';
+            // Ajouter un paramètre de version pour éviter le cache
+            const version = '?v=' + Date.now();
+            const filePathWithVersion = filePath + version;
             console.log('🔍 Chargement de', filePath);
             
-            const response = await fetch(filePath);
+            const response = await fetch(filePathWithVersion);
             if (!response.ok) {
                 throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
             }
