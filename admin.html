@@ -512,16 +512,16 @@
                             <div class="setting-header-new">
                                 <div class="setting-info-new">
                                     <h3 class="setting-title-new">🔐 Page de Configuration</h3>
-                                    <p class="setting-description-new">Activez ou désactivez l'accès à la page setup.html (création de compte admin)</p>
+                                    <p class="setting-description-new">La page setup.html est toujours accessible (fonctionnalité désactivée)</p>
                                 </div>
-                                <label class="toggle-switch-new">
-                                    <input type="checkbox" id="setupPageEnabled" onchange="toggleSetupPage()">
+                                <label class="toggle-switch-new" style="opacity: 0.5; pointer-events: none;">
+                                    <input type="checkbox" id="setupPageEnabled" checked disabled>
                                     <span class="toggle-slider-new"></span>
                                 </label>
                             </div>
                             <div class="setting-status-new" id="setupPageStatus">
                                 <span class="status-indicator-new">🟢</span>
-                                <span>La page setup.html est actuellement <strong>activée</strong></span>
+                                <span>La page setup.html est <strong>toujours accessible</strong></span>
                             </div>
                         </div>
                     </div>
