@@ -4,156 +4,351 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
-    <title>ABD PLAYER - Streams Gratuits</title>
+    <meta name="googlebot" content="noindex, nofollow">
+    <meta name="bingbot" content="noindex, nofollow">
+    <meta name="slurp" content="noindex, nofollow">
+    <title>Configuration Admin - ABD PLAYER</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script>
         // Initialiser le thème immédiatement pour éviter le flash
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
-        
-        // Filtrer les erreurs 404 Firebase (longue polling - normales et bénignes)
-        window.addEventListener('error', function(e) {
-            if (e.target && e.target.src && e.target.src.includes('.lp?') && e.target.src.includes('firebase')) {
-                e.preventDefault();
-                return false;
-            }
-        }, true);
     </script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Hero Section -->
-        <header class="hero-section">
-            <div class="hero-background">
-                <div class="hero-gradient"></div>
-                <div class="hero-pattern"></div>
-            </div>
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <span class="badge-dot"></span>
-                    <span>Streams en direct</span>
+        <header class="app-header">
+            <div class="header-wrapper">
+                <div>
+                    <h1 class="logo">⚙️ Configuration Admin</h1>
+                    <p class="tagline">Définissez vos identifiants d'administration</p>
                 </div>
-                <h1 class="hero-title">
-                    <span class="title-highlight">ABD</span> PLAYER
-                </h1>
-                <p class="hero-subtitle">Accédez à vos contenus favoris, gratuitement et sans limites</p>
-                <div class="hero-stats">
-                    <div class="hero-stat-item">
-                        <div class="hero-stat-value" id="heroStreamCount">0</div>
-                        <div class="hero-stat-label">Streams actifs</div>
-                    </div>
-                    <div class="hero-stat-divider"></div>
-                    <div class="hero-stat-item">
-                        <div class="hero-stat-value" id="heroTodayCount">0</div>
-                        <div class="hero-stat-label">Aujourd'hui</div>
-                    </div>
-                </div>
-            <div class="hero-actions">
-                <button id="themeToggle" class="theme-toggle-modern" aria-label="Changer de thème">
+                <button id="themeToggle" class="theme-toggle" aria-label="Changer de thème">
                     <span class="theme-icon">🌙</span>
                 </button>
             </div>
         </header>
 
         <main class="main-content">
-            <!-- Filters Section -->
-            <section class="filters-section">
-                <div class="filters-container">
-                    <div class="filters-label">
-                        <span class="filters-icon">🎯</span>
-                        <span>Filtrer par</span>
+            <section class="admin-panel">
+                <h2>🔐 Créer un compte administrateur</h2>
+                <form id="setupForm" class="stream-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">👤 Nom d'utilisateur</label>
+                            <input type="text" id="username" placeholder="Choisissez un nom d'utilisateur" required autofocus>
+                        </div>
                     </div>
-                    <div class="filter-tabs-modern">
-                        <button class="filter-tab active" data-filter="all">
-                            <span class="tab-icon">📺</span>
-                            <span>Tous</span>
-                        </button>
-                        <button class="filter-tab" data-filter="today">
-                            <span class="tab-icon">📅</span>
-                            <span>Aujourd'hui</span>
-                        </button>
-                        <button class="filter-tab" data-filter="upcoming">
-                            <span class="tab-icon">⏰</span>
-                            <span>À venir</span>
-                        </button>
-                        <button class="filter-tab" data-filter="past">
-                            <span class="tab-icon">📜</span>
-                            <span>Passés</span>
-                        </button>
-                    </div>
-                </div>
-            </section>
 
-            <!-- Streams Section -->
-            <section class="streams-section-modern">
-                <div id="streamsGrid" class="streams-grid-modern">
-                    <!-- Streams chargés dynamiquement -->
-                </div>
-
-                <div id="emptyState" class="empty-state-modern">
-                    <div class="empty-animation">
-                        <div class="empty-icon-modern">📺</div>
-                        <div class="empty-pulse"></div>
-                    </div>
-                    <h3 class="empty-title">Aucun stream disponible</h3>
-                    <p class="empty-description">Les streams ajoutés apparaîtront ici</p>
-                </div>
-            </section>
-
-            <!-- Social Section -->
-            <section class="social-section-modern">
-                <div class="social-container">
-                    <div class="social-header">
-                        <h3 class="social-title">Rejoignez notre communauté</h3>
-                        <p class="social-subtitle">Restez connecté et ne manquez aucun stream</p>
-                    </div>
-                    <div class="social-buttons-modern">
-                        <a href="" id="discordLink" target="_blank" rel="noopener noreferrer" class="social-btn-modern discord-modern" style="display: none;">
-                            <div class="social-btn-icon">💬</div>
-                            <div class="social-btn-content">
-                                <div class="social-btn-title">Discord</div>
-                                <div class="social-btn-subtitle">Rejoindre le serveur</div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="password">🔒 Mot de passe</label>
+                            <div style="display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap;">
+                                <input type="password" id="password" placeholder="Choisissez un mot de passe" required style="flex: 1; min-width: 250px;">
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <button type="button" onclick="togglePasswordVisibility()" class="btn btn-outline" style="white-space: nowrap;">
+                                        👁️ Voir
+                                    </button>
+                                    <button type="button" onclick="copyPassword()" class="btn" id="copyBtn" style="background: var(--success); color: white; white-space: nowrap;">
+                                        📋 Copier
+                                    </button>
+                                    <button type="button" onclick="generatePassword()" class="btn btn-primary" style="white-space: nowrap;">
+                                        🎲 Générer
+                                    </button>
+                                </div>
                             </div>
-                            <div class="social-btn-arrow">→</div>
-                        </a>
-                        <a href="" id="xLink" target="_blank" rel="noopener noreferrer" class="social-btn-modern twitter-modern" style="display: none;">
-                            <div class="social-btn-icon">𝕏</div>
-                            <div class="social-btn-content">
-                                <div class="social-btn-title">Twitter / X</div>
-                                <div class="social-btn-subtitle">Suivre nos actualités</div>
-                            </div>
-                            <div class="social-btn-arrow">→</div>
-                        </a>
+                            <div id="streamNameError" class="error-message" style="display: none;"></div>
+                        </div>
                     </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="confirmPassword">🔒 Confirmer le mot de passe</label>
+                            <input type="password" id="confirmPassword" placeholder="Retapez le mot de passe" required>
+                        </div>
+                    </div>
+
+                    <div id="setupMessage" class="error-message" style="display: none;"></div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        💾 Enregistrer les identifiants
+                    </button>
+                </form>
+
+                <div class="login-hint">
+                    <p>⚠️ Ces identifiants seront utilisés pour accéder au panel admin</p>
+                    <p>⚠️ Assurez-vous de les noter quelque part en sécurité</p>
                 </div>
             </section>
-        </main>
 
-        <footer class="app-footer">
-            <div class="footer-content">
-                <p>&copy; 2025 ABD PLAYER. Tous droits réservés.</p>
-                <div class="footer-links">
-                    <a href="legal.html">Mentions Légales</a>
-                    <span>•</span>
-                    <a href="legal.html#dmca">DMCA</a>
-                </div>
+            <div class="login-footer">
+                <a href="index.html" class="back-link">← Retour à l'accueil</a>
             </div>
-        </footer>
+        </main>
     </div>
 
     <script src="loader.js"></script>
-    <script data-enc="firebase-storage.js.enc.js"></script>
     <script data-enc="config.js.enc.js"></script>
     <script data-enc="protection.js.enc.js"></script>
     <script data-enc="common.js.enc.js"></script>
-    <script data-enc="script.enc.js"></script>
+    <script data-enc="auth.js.enc.js"></script>
+    <script>
+        // Vérifier si la page setup est activée
+        async function checkSetupPageEnabled() {
+            try {
+                if (typeof loadData === 'function') {
+                    const data = await loadData();
+                    const enabled = data.setupPageEnabled !== false; // Par défaut activé
+                    
+                    if (!enabled) {
+                        // Afficher un message et rediriger
+                        document.body.innerHTML = `
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: var(--bg-dark); color: var(--text-primary); font-family: 'Poppins', sans-serif; flex-direction: column; gap: 24px; padding: 24px; text-align: center;">
+                                <div style="font-size: 4rem;">🔒</div>
+                                <h1 style="font-size: 2rem; font-weight: 700; margin: 0;">Accès désactivé</h1>
+                                <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 500px;">
+                                    La page de configuration a été désactivée par l'administrateur.
+                                </p>
+                                <a href="index.html" style="padding: 14px 28px; background: var(--gradient-primary); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s;">
+                                    Retour à l'accueil
+                                </a>
+                            </div>
+                        `;
+                        return false;
+                    }
+                    return true;
+                }
+                return true; // Si la fonction n'est pas disponible, autoriser l'accès
+            } catch (error) {
+                console.error('Erreur lors de la vérification:', error);
+                return true; // En cas d'erreur, autoriser l'accès par sécurité
+            }
+        }
+        
+        // Vérifier au chargement de la page
+        (async function() {
+            const enabled = await checkSetupPageEnabled();
+            if (!enabled) {
+                return; // Arrêter l'exécution si désactivé
+            }
+        })();
+    </script>
+    <script>
+        // Fonction pour afficher/masquer le mot de passe
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const confirmInput = document.getElementById('confirmPassword');
+            const toggleBtn = event.target;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                confirmInput.type = 'text';
+                toggleBtn.innerHTML = '🙈 Cacher';
+            } else {
+                passwordInput.type = 'password';
+                confirmInput.type = 'password';
+                toggleBtn.innerHTML = '👁️ Voir';
+            }
+        }
+        
+        // Fonction pour copier le mot de passe
+        async function copyPassword() {
+            const passwordInput = document.getElementById('password');
+            const password = passwordInput.value;
+            const copyBtn = document.getElementById('copyBtn');
+            
+            if (!password) {
+                const messageDiv = document.getElementById('setupMessage');
+                messageDiv.textContent = '❌ Aucun mot de passe à copier';
+                messageDiv.className = 'error-message';
+                messageDiv.style.display = 'block';
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 3000);
+                return;
+            }
+            
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(password);
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '✅ Copié !';
+                    
+                    const messageDiv = document.getElementById('setupMessage');
+                    messageDiv.textContent = '✅ Mot de passe copié dans le presse-papiers !';
+                    messageDiv.className = 'success-message';
+                    messageDiv.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                        messageDiv.style.display = 'none';
+                    }, 2000);
+                } else {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = password;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-999999px';
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    
+                    try {
+                        document.execCommand('copy');
+                        const originalText = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '✅ Copié !';
+                        
+                        const messageDiv = document.getElementById('setupMessage');
+                        messageDiv.textContent = '✅ Mot de passe copié dans le presse-papiers !';
+                        messageDiv.className = 'success-message';
+                        messageDiv.style.display = 'block';
+                        
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalText;
+                            messageDiv.style.display = 'none';
+                        }, 2000);
+                    } catch (err) {
+                        throw new Error('Impossible de copier');
+                    } finally {
+                        document.body.removeChild(textArea);
+                    }
+                }
+            } catch (err) {
+                console.error('Erreur lors de la copie:', err);
+                const messageDiv = document.getElementById('setupMessage');
+                messageDiv.textContent = '❌ Erreur lors de la copie. Essayez de sélectionner le mot de passe manuellement.';
+                messageDiv.className = 'error-message';
+                messageDiv.style.display = 'block';
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 4000);
+            }
+        }
+        
+        // Fonction pour générer un mot de passe
+        function generatePassword() {
+            const length = 16;
+            const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+            let password = '';
+            
+            password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)];
+            password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
+            password += '0123456789'[Math.floor(Math.random() * 10)];
+            password += '!@#$%^&*'[Math.floor(Math.random() * 8)];
+            
+            for (let i = password.length; i < length; i++) {
+                password += charset[Math.floor(Math.random() * charset.length)];
+            }
+            
+            password = password.split('').sort(() => Math.random() - 0.5).join('');
+            
+            const passwordInput = document.getElementById('password');
+            const confirmInput = document.getElementById('confirmPassword');
+            
+            passwordInput.value = password;
+            confirmInput.value = password;
+            
+            passwordInput.type = 'text';
+            confirmInput.type = 'text';
+            
+            const toggleBtn = document.querySelector('button[onclick="togglePasswordVisibility()"]');
+            if (toggleBtn) {
+                toggleBtn.innerHTML = '🙈 Cacher';
+            }
+            
+            const messageDiv = document.getElementById('setupMessage');
+            messageDiv.innerHTML = '✅ Mot de passe généré : <strong style="font-family: monospace; font-size: 1.1em; background: rgba(99, 102, 241, 0.2); padding: 6px 12px; border-radius: 6px; display: inline-block; margin-top: 8px;">' + password + '</strong>';
+            messageDiv.className = 'success-message';
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 8000);
+        }
+        
+        // Attendre que setupCredentials soit disponible
+        function waitForSetupCredentials(callback, maxAttempts = 100) {
+            let attempts = 0;
+            const checkInterval = setInterval(() => {
+                attempts++;
+                if (typeof setupCredentials !== 'undefined') {
+                    clearInterval(checkInterval);
+                    callback();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(checkInterval);
+                    console.error('Erreur: setupCredentials non disponible');
+                    const messageDiv = document.getElementById('setupMessage');
+                    messageDiv.textContent = '❌ Erreur: Les fichiers n\'ont pas pu être chargés. Vérifiez la console (F12).';
+                    messageDiv.className = 'error-message';
+                    messageDiv.style.display = 'block';
+                }
+            }, 100);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            waitForSetupCredentials(() => {
+                const setupForm = document.getElementById('setupForm');
+                const messageDiv = document.getElementById('setupMessage');
+                
+                setupForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    
+                    if (!username || !password) {
+                        showMessage('Veuillez remplir tous les champs', 'error');
+                        return;
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        showMessage('Les mots de passe ne correspondent pas', 'error');
+                        return;
+                    }
+                    
+                    if (password.length < 4) {
+                        showMessage('Le mot de passe doit contenir au moins 4 caractères', 'error');
+                        return;
+                    }
+                    
+                    // Désactiver le bouton pendant la sauvegarde
+                    const submitBtn = setupForm.querySelector('button[type="submit"]');
+                    const originalBtnText = submitBtn.innerHTML;
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '💾 Sauvegarde...';
+                    
+                    try {
+                        const success = await setupCredentials(username, password);
+                        if (success) {
+                            showMessage('✅ Identifiants créés avec succès ! Redirection...', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'admin.html';
+                            }, 1500);
+                        } else {
+                            showMessage('Erreur lors de la création des identifiants', 'error');
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnText;
+                        }
+                    } catch (error) {
+                        console.error('Erreur:', error);
+                        showMessage('Erreur lors de la création des identifiants: ' + error.message, 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                    }
+                });
+                
+                function showMessage(message, type) {
+                    messageDiv.textContent = message;
+                    messageDiv.innerHTML = message;
+                    messageDiv.style.display = 'block';
+                    messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
