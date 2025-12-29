@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
-    <title>ABD PLAYER - Streams Gratuits</title>
+    <title>ABD PLAYER</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,13 +13,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script>
-        // Initialiser le thème immédiatement pour éviter le flash
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
         
-        // Filtrer les erreurs 404 Firebase (longue polling - normales et bénignes)
         window.addEventListener('error', function(e) {
             if (e.target && e.target.src && e.target.src.includes('.lp?') && e.target.src.includes('firebase')) {
                 e.preventDefault();
@@ -30,11 +28,9 @@
 </head>
 <body>
     <div class="app-wrapper">
-        <!-- Navigation Header -->
         <nav class="main-nav">
             <div class="nav-container">
                 <div class="nav-brand">
-                    <span class="brand-icon">⚡</span>
                     <span class="brand-text">ABD PLAYER</span>
                 </div>
                 <button id="themeToggle" class="nav-theme-toggle" aria-label="Changer de thème">
@@ -43,7 +39,6 @@
             </div>
         </nav>
 
-        <!-- Hero Section -->
         <section class="hero-section-new">
             <div class="hero-background-new">
                 <div class="hero-gradient-new"></div>
@@ -61,9 +56,7 @@
             </div>
         </section>
 
-        <!-- Main Content -->
         <main class="main-content-new">
-            <!-- Filters Section -->
             <section class="filters-section-new">
                 <div class="filters-container-new">
                     <div class="filters-label-new">
@@ -87,10 +80,8 @@
                 </div>
             </section>
 
-            <!-- Streams Section -->
             <section class="streams-section-new">
                 <div id="streamsGrid" class="streams-grid-new">
-                    <!-- Streams chargés dynamiquement -->
                 </div>
 
                 <div id="emptyState" class="empty-state-new">
@@ -103,7 +94,6 @@
                 </div>
             </section>
 
-            <!-- Social Section -->
             <section class="social-section-new">
                 <div class="social-container-new">
                     <div class="social-header-new">
@@ -132,10 +122,9 @@
             </section>
         </main>
 
-        <!-- Footer -->
         <footer class="app-footer-new">
             <div class="footer-content-new">
-                <p>&copy; 2024 ABD PLAYER. Tous droits réservés.</p>
+                <p>&copy; 2025 ABD PLAYER. Tous droits réservés.</p>
                 <div class="footer-links-new">
                     <a href="legal.html">Mentions Légales</a>
                     <span>•</span>
