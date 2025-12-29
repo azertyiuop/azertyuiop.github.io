@@ -1,55 +1,44 @@
-// Déchiffreur de fichiers JavaScript chiffrés
-// La clé est reconstituée dynamiquement pour éviter qu'elle soit visible en clair
-
 const ENCRYPTED_DIR = 'encrypted'; // Dossier contenant les fichiers chiffrés
 
-// Clé de chiffrement obscurcie (divisée en plusieurs parties)
 (function() {
     'use strict';
     // Parties de la clé (obscurcies)
-    const _p1 = '21bd65c40e381c29';
-    const _p2 = '0ea5538e808e4e34';
-    const _p3 = 'de42da68fe29e39d';
-    const _p4 = 'e78f4f22e3040800';
+    const _p1 = '64af3e03014b6cb6';
+    const _p2 = '403718cc5d79a609';
+    const _p3 = '1a8336a5ebf0bfd6';
+    const _p4 = '80f2a060c89d1ec5';
     
-    // Reconstituer la clé (obscurcie avec des opérations)
     window._ENCRYPTION_KEY = _p1 + _p2 + _p3 + _p4;
 })();
 
-// Variable globale pour la clé (reconstituée)
 const ENCRYPTION_KEY = window._ENCRYPTION_KEY || (function() {
     // Fallback si la clé n'a pas été définie
     const parts = [
-        String.fromCharCode(50, 49, 98, 100, 54, 53, 99, 52, 48, 101, 51, 56, 49, 99, 50, 57),
-        String.fromCharCode(48, 101, 97, 53, 53, 51, 56, 101, 56, 48, 56, 101, 52, 101, 51, 52),
-        String.fromCharCode(100, 101, 52, 50, 100, 97, 54, 56, 102, 101, 50, 57, 101, 51, 57, 100),
-        String.fromCharCode(101, 55, 56, 102, 52, 102, 50, 50, 101, 51, 48, 52, 48, 56, 48, 48)
+        String.fromCharCode(54, 52, 97, 102, 51, 101, 48, 51, 48, 49, 52, 98, 54, 99, 98, 54),
+        String.fromCharCode(52, 48, 51, 55, 49, 56, 99, 99, 53, 100, 55, 57, 97, 54, 48, 57),
+        String.fromCharCode(49, 97, 56, 51, 51, 54, 97, 53, 101, 98, 102, 48, 98, 102, 100, 54),
+        String.fromCharCode(56, 48, 102, 50, 97, 48, 54, 48, 99, 56, 57, 100, 49, 101, 99, 53)
     ];
     return parts.join('');
 })();
 
-// Gestionnaire d'erreurs global pour capturer les erreurs de déclaration
 const originalErrorHandler = window.onerror;
 window.onerror = function(message, source, lineno, colno, error) {
     // Ignorer les erreurs de déclaration déjà faite
     if (message && typeof message === 'string' && message.includes('already been declared')) {
         console.log(`⚠️ Erreur de déclaration ignorée: ${message}`);
-        return true; // Empêcher l'affichage de l'erreur
+        return true;
     }
-    // Appeler le gestionnaire d'erreurs original s'il existe
     if (originalErrorHandler) {
         return originalErrorHandler(message, source, lineno, colno, error);
     }
     return false;
 };
 
-// Fonction pour déchiffrer avec AES-256 (côté client)
 async function decryptContent(encryptedData, key) {
     try {
-        // Nettoyer les données (supprimer les espaces, retours à la ligne, etc.)
         encryptedData = encryptedData.trim().replace(/\s+/g, '');
         
-        // Séparer l'IV et le contenu chiffré
         const parts = encryptedData.split(':');
         if (parts.length !== 2) {
             console.error('Format invalide: Le fichier doit contenir "IV:données_chiffrées"');
@@ -60,7 +49,6 @@ async function decryptContent(encryptedData, key) {
         const ivHex = parts[0].trim();
         const encryptedHex = parts[1].trim();
         
-        // Vérifier que l'IV et les données sont en hexadécimal valide
         if (!/^[0-9a-fA-F]+$/.test(ivHex)) {
             throw new Error('IV invalide: doit être en hexadécimal');
         }
@@ -68,39 +56,32 @@ async function decryptContent(encryptedData, key) {
             throw new Error('Données chiffrées invalides: doivent être en hexadécimal');
         }
         
-        // Vérifier la longueur de l'IV (doit être 32 caractères hex = 16 bytes)
         if (ivHex.length !== 32) {
             throw new Error(`IV de longueur incorrecte: ${ivHex.length} caractères (attendu: 32)`);
         }
         
-        // Vérifier que les données chiffrées ont une longueur valide (multiple de 32 pour AES-CBC)
         if (encryptedHex.length % 32 !== 0) {
             throw new Error(`Longueur des données chiffrées invalide: ${encryptedHex.length} caractères (doit être un multiple de 32 pour AES-CBC)`);
         }
         
-        // Convertir la clé et l'IV en ArrayBuffer
         const keyBuffer = hexToArrayBuffer(key);
         const ivBuffer = hexToArrayBuffer(ivHex);
         
-        // Vérifier la longueur de la clé (doit être 64 caractères hex = 32 bytes pour AES-256)
         if (key.length !== 64) {
             throw new Error(`Clé de longueur incorrecte: ${key.length} caractères (attendu: 64)`);
         }
         
-        // Vérifier la longueur de l'IV en bytes (doit être 16 bytes pour AES-CBC)
         if (ivBuffer.byteLength !== 16) {
             throw new Error(`IV de longueur incorrecte: ${ivBuffer.byteLength} bytes (attendu: 16)`);
         }
         
-        // Vérifier la longueur des données chiffrées en bytes (doit être un multiple de 16)
         const encryptedBuffer = hexToArrayBuffer(encryptedHex);
         if (encryptedBuffer.byteLength % 16 !== 0) {
             throw new Error(`Données chiffrées de longueur invalide: ${encryptedBuffer.byteLength} bytes (doit être un multiple de 16 pour AES-CBC)`);
         }
         
         console.log(`🔍 Débogage - IV: ${ivHex.substring(0, 16)}... (${ivHex.length} chars), Données: ${encryptedHex.length} chars (${encryptedBuffer.byteLength} bytes), Clé: ${key.substring(0, 16)}... (${key.length} chars)`);
-        
-        // Importer la clé
+
         const cryptoKey = await crypto.subtle.importKey(
             'raw',
             keyBuffer,
