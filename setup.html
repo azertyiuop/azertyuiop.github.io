@@ -423,24 +423,39 @@
                 setupForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     
-                    // VÉRIFICATION CRITIQUE : Vérifier directement dans la BDD
+                    // VÉRIFICATION CRITIQUE 1: Vérifier directement dans la BDD
+                    console.log('🔍 Vérification avant soumission du formulaire...');
                     try {
-                        if (typeof checkSetupPageStatusFromDB === 'function') {
-                            const enabled = await checkSetupPageStatusFromDB();
-                            if (!enabled) {
-                                alert('❌ La page de configuration a été désactivée. Vous ne pouvez pas créer de compte.');
-                                window.location.href = 'index.html';
-                                return false;
-                            }
+                        let enabled = false;
+                        
+                        // Essayer d'abord avec checkSetupPageStatusFromDB
+                        if (typeof window.checkSetupPageStatusFromDB === 'function') {
+                            console.log('📡 Requête directe à la BDD...');
+                            enabled = await window.checkSetupPageStatusFromDB();
+                            console.log('📊 Résultat:', enabled ? 'ACTIVÉ' : 'DÉSACTIVÉ');
+                        } else if (typeof window.loadData === 'function') {
+                            console.log('📡 Utilisation de loadData...');
+                            const data = await window.loadData();
+                            enabled = data.setupPageEnabled !== false;
+                            console.log('📊 Résultat:', enabled ? 'ACTIVÉ' : 'DÉSACTIVÉ');
                         } else {
-                            // Si la fonction n'est pas disponible, bloquer par sécurité
-                            alert('❌ Erreur lors de la vérification. Accès refusé.');
+                            console.error('❌ Aucune fonction de vérification disponible');
+                            alert('❌ Erreur: Impossible de vérifier le statut. Accès refusé par sécurité.');
                             return false;
                         }
+                        
+                        if (!enabled) {
+                            console.error('❌ BLOQUÉ: La page setup est désactivée');
+                            alert('❌ La page de configuration a été désactivée. Vous ne pouvez pas créer de compte.');
+                            window.location.href = 'index.html';
+                            return false;
+                        }
+                        
+                        console.log('✅ Vérification passée, soumission du formulaire autorisée');
                     } catch (error) {
-                        console.error('Erreur lors de la vérification:', error);
+                        console.error('❌ Erreur lors de la vérification:', error);
                         // En cas d'erreur, bloquer par sécurité
-                        alert('❌ Erreur lors de la vérification. Accès refusé.');
+                        alert('❌ Erreur lors de la vérification. Accès refusé par sécurité.');
                         return false;
                     }
                     
