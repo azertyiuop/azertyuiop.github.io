@@ -95,7 +95,49 @@
     <script src="loader.js"></script>
     <script data-enc="config.js.enc.js"></script>
     <script data-enc="protection.js.enc.js"></script>
+    <script data-enc="common.js.enc.js"></script>
     <script data-enc="auth.js.enc.js"></script>
+    <script>
+        // Vérifier si la page setup est activée
+        async function checkSetupPageEnabled() {
+            try {
+                if (typeof loadData === 'function') {
+                    const data = await loadData();
+                    const enabled = data.setupPageEnabled !== false; // Par défaut activé
+                    
+                    if (!enabled) {
+                        // Afficher un message et rediriger
+                        document.body.innerHTML = `
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: var(--bg-dark); color: var(--text-primary); font-family: 'Poppins', sans-serif; flex-direction: column; gap: 24px; padding: 24px; text-align: center;">
+                                <div style="font-size: 4rem;">🔒</div>
+                                <h1 style="font-size: 2rem; font-weight: 700; margin: 0;">Accès désactivé</h1>
+                                <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 500px;">
+                                    La page de configuration a été désactivée par l'administrateur.
+                                </p>
+                                <a href="index.html" style="padding: 14px 28px; background: var(--gradient-primary); color: white; text-decoration: none; border-radius: 12px; font-weight: 600; transition: all 0.3s;">
+                                    Retour à l'accueil
+                                </a>
+                            </div>
+                        `;
+                        return false;
+                    }
+                    return true;
+                }
+                return true; // Si la fonction n'est pas disponible, autoriser l'accès
+            } catch (error) {
+                console.error('Erreur lors de la vérification:', error);
+                return true; // En cas d'erreur, autoriser l'accès par sécurité
+            }
+        }
+        
+        // Vérifier au chargement de la page
+        (async function() {
+            const enabled = await checkSetupPageEnabled();
+            if (!enabled) {
+                return; // Arrêter l'exécution si désactivé
+            }
+        })();
+    </script>
     <script>
         // Fonction pour afficher/masquer le mot de passe
         function togglePasswordVisibility() {
