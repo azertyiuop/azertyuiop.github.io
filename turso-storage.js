@@ -39,26 +39,12 @@ async function initTurso() {
 async function tursoQuery(sql, params = []) {
     const client = await initTurso();
     
-    // Convertir les paramètres au format attendu par Turso
-    // Format: { "type": "text", "value": "..." } pour les chaînes
-    // Format: { "type": "integer", "value": "..." } pour les entiers
-    // Format: null pour les valeurs null
+    // Format correct pour Turso : passer les valeurs directement
+    // Turso détecte automatiquement le type (string, number, null)
+    // Pas besoin de formatage spécial avec type/value
     const formattedParams = params.map(param => {
-        if (param === null || param === undefined) {
-            return null;
-        }
-        if (typeof param === 'string') {
-            return { "type": "text", "value": param };
-        }
-        if (typeof param === 'number') {
-            if (Number.isInteger(param)) {
-                return { "type": "integer", "value": param.toString() };
-            } else {
-                return { "type": "real", "value": param.toString() };
-            }
-        }
-        // Pour les autres types, convertir en chaîne
-        return { "type": "text", "value": String(param) };
+        // Passer directement la valeur - Turso gère automatiquement les types
+        return param;
     });
     
     const response = await fetch(`https://${client.url}/v2/pipeline`, {
